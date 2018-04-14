@@ -304,12 +304,14 @@ class EngravingInternal:
             if __class__.mode == 'NOGRAVI':
                 path += '_noeng'
             path += '.png'
-            for currentarea in bpy.context.window_manager.windows[0].screen.areas:
-                if currentarea.type == 'IMAGE_EDITOR':
-                    overridearea = bpy.context.copy()
-                    overridearea['area'] = currentarea
-                    bpy.ops.image.save_as(overridearea, copy=True, filepath=path)
-                    break
+            # for currentarea in bpy.context.window_manager.windows[0].screen.areas:
+            #     if currentarea.type == 'IMAGE_EDITOR':
+            #         overridearea = bpy.context.copy()
+            #         overridearea['area'] = currentarea
+            #         bpy.ops.image.save_as(overridearea, copy=True, filepath=path)
+            #         break
+            bpy.data.images['Render Result'].save_render(filepath=path)
+
         else:
             print('Error - no destination directory')
 
