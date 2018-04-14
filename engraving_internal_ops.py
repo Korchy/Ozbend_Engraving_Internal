@@ -28,7 +28,7 @@ class EngravingInternalStart(bpy.types.Operator):
                 parser.add_argument('-sy', '--size_y', dest='size_y', type=int, required=False, help='Image Y resolution')
                 parser.add_argument('-s', '--scale', dest='scale', type=float, required=False, help='Mesh scale')
                 parser.add_argument('-sa', '--samples', dest='samples', type=int, required=False, help='Render samples')
-                args = parser.parse_known_args(argv)
+                args = parser.parse_known_args(argv)[0]
                 if EngravingInternalOptions.options:
                     if args.size_x is not None:
                         EngravingInternalOptions.options['resolution_x'] = args.size_x
