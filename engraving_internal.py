@@ -151,8 +151,8 @@ class EngravingInternal:
                 # load texture mask
                 texturename = os.path.splitext(__class__.objname)[0] + gravinum + '.png'
                 texturepath = os.path.join(EngravingInternalOptions.options['source_obj_dir'], texturename)
-                # if const_gravi_name (from command line)
                 if EngravingInternalOptions.const_gravi_name and os.path.exists(EngravingInternalOptions.const_gravi_name):
+                    # if const_gravi_name (from command line)
                     texturepath = EngravingInternalOptions.const_gravi_name
                     texturename = os.path.basename(EngravingInternalOptions.const_gravi_name)
                 if os.path.exists(texturepath):
