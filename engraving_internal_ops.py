@@ -28,6 +28,8 @@ class EngravingInternalStart(bpy.types.Operator):
                 parser.add_argument('-sy', '--size_y', dest='size_y', type=int, required=False, help='Image Y resolution')
                 parser.add_argument('-s', '--scale', dest='scale', type=float, required=False, help='Mesh scale')
                 parser.add_argument('-sa', '--samples', dest='samples', type=int, required=False, help='Render samples')
+                parser.add_argument('-p', '--path', dest='path', metavar='FILE', required=False, help='Dest path')
+                parser.add_argument('-n', '--name', dest='name', type=str, required=False, help='Dest name')
                 args = parser.parse_known_args(argv)[0]
                 if EngravingInternalOptions.options:
                     if args.size_x is not None:
@@ -40,6 +42,10 @@ class EngravingInternalStart(bpy.types.Operator):
                         EngravingInternalOptions.options['correction']['scale']['Z'] = args.scale
                     if args.samples is not None:
                         EngravingInternalOptions.options['samples'] = args.samples
+                    if args.path is not None:
+                        EngravingInternalOptions.options['dest_dir'] = args.path
+                    if args.name is not None:
+                        EngravingInternalOptions.const_dest_name = args.name
         else:
             print('Options file mast be in the same directory with blend-file')
             return {'CANCELLED'}

@@ -294,7 +294,11 @@ class EngravingInternal:
     @staticmethod
     def saverenderrezult(camera):
         if os.path.exists(EngravingInternalOptions.options['dest_dir']):
-            path = EngravingInternalOptions.options['dest_dir'] + os.sep + os.path.splitext(__class__.objname)[0]   # dir + filename
+            path = EngravingInternalOptions.options['dest_dir'] + os.sep    # dir
+            if EngravingInternalOptions.const_dest_name is not None:        # + filename
+                path += EngravingInternalOptions.const_dest_name
+            else:
+                path += os.path.splitext(__class__.objname)[0]
             # + engraves names
             if __class__.gravi:
                 for mesh in sorted(__class__.gravi, reverse=True, key=lambda x: x.name):
@@ -330,6 +334,7 @@ class EngravingInternalOptions:
     materialgemid = 'Gem'
     materialtransparentname = 'Trans'
     materialgraviname = 'Gravi'
+    const_dest_name = None      # if not None - owerwrites obj name in dest render file name
 
     @staticmethod
     def readfromfile(dir):
