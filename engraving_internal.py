@@ -150,8 +150,13 @@ class EngravingInternal:
                     gravimat.use_fake_user = False
                 # load texture mask
                 texturename = os.path.splitext(__class__.objname)[0] + gravinum + '.png'
-                if os.path.exists(os.path.join(EngravingInternalOptions.options['source_obj_dir'], texturename)):
-                    bpy.data.images.load(os.path.join(EngravingInternalOptions.options['source_obj_dir'], texturename), check_existing=True)
+                texturepath = os.path.join(EngravingInternalOptions.options['source_obj_dir'], texturename)
+                # if const_gravi_name (from command line)
+                if EngravingInternalOptions.const_gravi_name and os.path.exists(EngravingInternalOptions.const_gravi_name):
+                    texturepath = EngravingInternalOptions.const_gravi_name
+                    texturename = os.path.basename(EngravingInternalOptions.const_gravi_name)
+                if os.path.exists(texturepath):
+                    bpy.data.images.load(texturepath, check_existing=True)
                     # set texture mask to gravi-mesh
                     texture = bpy.data.textures.new(texturename, type='IMAGE')
                     texture.image = bpy.data.images[texturename]
@@ -335,6 +340,7 @@ class EngravingInternalOptions:
     materialtransparentname = 'Trans'
     materialgraviname = 'Gravi'
     const_dest_name = None      # if not None - owerwrites obj name in dest render file name
+    const_gravi_name = None     # if not None - owerwrites *.png texture file name (with gravi)
 
     @staticmethod
     def readfromfile(dir):

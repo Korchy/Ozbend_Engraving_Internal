@@ -30,6 +30,7 @@ class EngravingInternalStart(bpy.types.Operator):
                 parser.add_argument('-sa', '--samples', dest='samples', type=int, required=False, help='Render samples')
                 parser.add_argument('-p', '--path', dest='path', metavar='FILE', required=False, help='Dest path')
                 parser.add_argument('-n', '--name', dest='name', type=str, required=False, help='Dest name')
+                parser.add_argument('-g', '--gravi', dest='gravi', metavar='FILE', required=False, help='Gravi path')
                 args = parser.parse_known_args(argv)[0]
                 if EngravingInternalOptions.options:
                     if args.size_x is not None:
@@ -46,6 +47,8 @@ class EngravingInternalStart(bpy.types.Operator):
                         EngravingInternalOptions.options['dest_dir'] = args.path
                     if args.name is not None:
                         EngravingInternalOptions.const_dest_name = args.name
+                    if args.gravi is not None:
+                        EngravingInternalOptions.const_gravi_name = args.gravi
         else:
             print('Options file mast be in the same directory with blend-file')
             return {'CANCELLED'}
