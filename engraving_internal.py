@@ -156,6 +156,11 @@ class EngravingInternal:
                     texturepath = EngravingInternalOptions.const_gravi_name
                     texturename = os.path.basename(EngravingInternalOptions.const_gravi_name)
                 if os.path.exists(texturepath):
+                    print('--'*50)
+                    print(texturepath)
+                    print(texturename)
+                    print('--'*50)
+
                     bpy.data.images.load(texturepath, check_existing=True)
                     # set texture mask to gravi-mesh
                     texture = bpy.data.textures.new(texturename, type='IMAGE')
