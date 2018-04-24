@@ -153,8 +153,8 @@ class EngravingInternal:
                 texturepath = os.path.join(EngravingInternalOptions.options['source_obj_dir'], texturename)
                 if EngravingInternalOptions.const_gravi_name and os.path.exists(EngravingInternalOptions.const_gravi_name):
                     # if const_gravi_name (from command line)
-                    texturename = EngravingInternalOptions.const_gravi_name
-                    texturepath = os.path.basename(EngravingInternalOptions.const_gravi_name)
+                    texturepath = EngravingInternalOptions.const_gravi_name
+                    texturename = os.path.basename(EngravingInternalOptions.const_gravi_name)
                 if os.path.exists(texturepath):
                     bpy.data.images.load(texturepath, check_existing=True)
                     # set texture mask to gravi-mesh
