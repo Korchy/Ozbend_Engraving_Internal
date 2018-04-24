@@ -90,7 +90,7 @@ type = Image or Movie
 
 Запустить рендер сцены командой:
 
-    blender -b /tmp/scene.blend -P /tmp/addon_execute.py -- -sx 300 -sy 600 -s 0.5 -sa 10 -n NewName -p /tmp/dest1 -g /tmp/new_gravi.png
+    blender -b /tmp/scene.blend -P /tmp/addon_execute.py -- -sx 300 -sy 600 -s 0.5 -sa 10 -n NewName -p /tmp/dest1 -o /tmp -g /tmp/new_gravi.png
 
 Параметры командной строки:
 
@@ -104,4 +104,5 @@ type = Image or Movie
     -sa - количество проходов рендера (samples)
     -n - Имя заменяющее имя *.obj файла в готовом рендене
     -p - Кастомный путь для сохранения готовых рендеров
+    -o - Путь к импортируемым *.obj (заменяет указанный в options.json)
     -g - Путь к специальному файлу с гравировкой (если он есть - гравировка из этого файла ставится на место всех гравировок в *.obj)
