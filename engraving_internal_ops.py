@@ -60,8 +60,11 @@ class EngravingInternalStart(bpy.types.Operator):
             context.screen.scene.render.resolution_y = EngravingInternalOptions.options['resolution_y']
             context.screen.scene.cycles.samples = EngravingInternalOptions.options['samples']
             # search for *.obj
-            if EngravingInternalOptions.options['source_obj_dir'] and os.path.exists(EngravingInternalOptions.options['source_obj_dir']):
-                EngravingInternalOptions.objlist = [file for file in os.listdir(EngravingInternalOptions.options['source_obj_dir']) if file.endswith('.obj')]
+            obj_dir = EngravingInternalOptions.options['source_obj_dir']
+            if EngravingInternalOptions.const_obj_dir is not None:
+                obj_dir = EngravingInternalOptions.const_obj_dir
+            if obj_dir and os.path.exists(obj_dir):
+                EngravingInternalOptions.objlist = [file for file in os.listdir(obj_dir) if file.endswith('.obj')]
             # serch for cameras
             EngravingInternalOptions.cameraslist = [object for object in context.screen.scene.objects if object.type=='CAMERA']
             # search for materials
