@@ -51,7 +51,7 @@ class EngravingInternalStart(bpy.types.Operator):
                     if args.gravi is not None:
                         EngravingInternalOptions.const_gravi_name = args.gravi
                     if args.obj_dir is not None:
-                        EngravingInternalOptions.const_obj_dir = args.obj_dir
+                        EngravingInternalOptions.options['source_obj_dir'] = args.obj_dir
         else:
             print('Options file mast be in the same directory with blend-file')
             return {'CANCELLED'}
@@ -61,8 +61,6 @@ class EngravingInternalStart(bpy.types.Operator):
             context.screen.scene.cycles.samples = EngravingInternalOptions.options['samples']
             # search for *.obj
             obj_dir = EngravingInternalOptions.options['source_obj_dir']
-            if EngravingInternalOptions.const_obj_dir is not None:
-                obj_dir = EngravingInternalOptions.const_obj_dir
             if obj_dir and os.path.exists(obj_dir):
                 EngravingInternalOptions.objlist = [file for file in os.listdir(obj_dir) if file.endswith('.obj')]
             # serch for cameras

@@ -47,8 +47,6 @@ class EngravingInternal:
         # import current obj
         bpy.ops.object.select_all(action='DESELECT')
         source_obj_path = EngravingInternalOptions.options['source_obj_dir']
-        if EngravingInternalOptions.const_obj_dir is not None:
-            source_obj_path = EngravingInternalOptions.const_obj_dir
         rez = bpy.ops.import_scene.obj(filepath=os.path.join(source_obj_path, filename), use_smooth_groups=False, use_split_groups=True)
         if rez == {'FINISHED'}:
             __class__.obj = context.selected_objects
@@ -342,7 +340,6 @@ class EngravingInternalOptions:
     materialgemid = 'Gem'
     materialtransparentname = 'Trans'
     materialgraviname = 'Gravi'
-    const_obj_dir = None        # if not None - owerwrites source_obj_dir from options.json
     const_dest_name = None      # if not None - owerwrites obj name in dest render file name
     const_gravi_name = None     # if not None - owerwrites *.png texture file name (with gravi)
 
