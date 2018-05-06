@@ -159,9 +159,12 @@ class EngravingInternal:
                 if os.path.exists(texturepath):
                     bpy.data.images.load(texturepath, check_existing=True)
                     # set texture mask to gravi-mesh
-                    texture = bpy.data.textures.new(texturename, type='IMAGE')
-                    texture.image = bpy.data.images[texturename]
-                    bpy.data.materials[gravimatname].texture_slots[0].texture = texture
+                    if EngravingInternalOptions.options['engine'] == 'internal':
+                        texture = bpy.data.textures.new(texturename, type='IMAGE')
+                        texture.image = bpy.data.images[texturename]
+                        bpy.data.materials[gravimatname].texture_slots[0].texture = texture
+                    elif EngravingInternalOptions.options['engine'] == 'cycles':
+                        bpy.data.materials[gravimatname].node_tree.nodes['Gravi_Text'].image = bpy.data.images[texturename]
                 else:
                     print('Error - no texture file with gravi')
                 # set mat with on gravi to gravi mesh
@@ -314,14 +317,15 @@ class EngravingInternal:
             if __class__.mode == 'NOGRAVI':
                 path += '_noeng'
             path += '.png'
-            # for currentarea in bpy.context.window_manager.windows[0].screen.areas:
-            #     if currentarea.type == 'IMAGE_EDITOR':
-            #         overridearea = bpy.context.copy()
-            #         overridearea['area'] = currentarea
-            #         bpy.ops.image.save_as(overridearea, copy=True, filepath=path)
-            #         break
-            bpy.data.images['Render Result'].save_render(filepath=path)
-
+            if EngravingInternalOptions.command_line_render:
+                bpy.data.images['Render Result'].save_render(filepath=path)
+            else:
+                for currentarea in bpy.context.window_manager.windows[0].screen.areas:
+                    if currentarea.type == 'IMAGE_EDITOR':
+                        overridearea = bpy.context.copy()
+                        overridearea['area'] = currentarea
+                        bpy.ops.image.save_as(overridearea, copy=True, filepath=path)
+                        break
         else:
             print('Error - no destination directory')
 
@@ -329,6 +333,7 @@ class EngravingInternal:
 class EngravingInternalOptions:
 
     options = None
+    command_line_render = False # True if render from command line (without gui)
     objlist = []    # list of filenames
     cameraslist = []
     materialslist = []
@@ -338,8 +343,8 @@ class EngravingInternalOptions:
     materialidtextlength = 3    # identifier material length (ex: MET, GEM)
     materialmetid = 'Met'
     materialgemid = 'Gem'
-    materialtransparentname = 'Trans'
-    materialgraviname = 'Gravi'
+    materialtransparentname = None  # 'Trans_internal' or 'Trans_cycles'
+    materialgraviname = None        # 'Gravi_internal' or 'Gravi_cycles'
     const_dest_name = None      # if not None - owerwrites obj name in dest render file name
     const_gravi_name = None     # if not None - owerwrites *.png texture file name (with gravi)
 

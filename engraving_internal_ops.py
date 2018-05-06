@@ -32,6 +32,8 @@ class EngravingInternalStart(bpy.types.Operator):
                 parser.add_argument('-n', '--name', dest='name', type=str, required=False, help='Dest name')
                 parser.add_argument('-g', '--gravi', dest='gravi', metavar='FILE', required=False, help='Gravi path')
                 parser.add_argument('-o', '--obj_dir', dest='obj_dir', metavar='FILE', required=False, help='Obj custom path')
+                parser.add_argument('-c', '--cameras_nums', dest='cameras_nums', type=str, required=False, help='Cameras list')
+                parser.add_argument('-e', '--render_engine', dest='render_engine', type=str, required=False, help='Render engine')
                 args = parser.parse_known_args(argv)[0]
                 if EngravingInternalOptions.options:
                     if args.size_x is not None:
@@ -52,10 +54,18 @@ class EngravingInternalStart(bpy.types.Operator):
                         EngravingInternalOptions.const_gravi_name = args.gravi
                     if args.obj_dir is not None:
                         EngravingInternalOptions.options['source_obj_dir'] = args.obj_dir
+                    if args.cameras_nums is not None:
+                        EngravingInternalOptions.options['cameras'] = list(map(int, args.cameras_nums.split('-')))
+                    if args.render_engine is not None:
+                        EngravingInternalOptions.options['engine'] = args.render_engine
+                EngravingInternalOptions.command_line_render = True
         else:
             print('Options file mast be in the same directory with blend-file')
             return {'CANCELLED'}
         if EngravingInternalOptions.options:
+            print('------------------------------------------')
+            print(EngravingInternalOptions.options)
+            print('------------------------------------------')
             context.screen.scene.render.resolution_x = EngravingInternalOptions.options['resolution_x']
             context.screen.scene.render.resolution_y = EngravingInternalOptions.options['resolution_y']
             context.screen.scene.cycles.samples = EngravingInternalOptions.options['samples']
@@ -64,13 +74,33 @@ class EngravingInternalStart(bpy.types.Operator):
             if obj_dir and os.path.exists(obj_dir):
                 EngravingInternalOptions.objlist = [file for file in os.listdir(obj_dir) if file.endswith('.obj')]
             # serch for cameras
-            EngravingInternalOptions.cameraslist = [object for object in context.screen.scene.objects if object.type=='CAMERA']
+            if EngravingInternalOptions.options['cameras']:
+                # from options.json or command line
+                EngravingInternalOptions.cameraslist = [obj for obj in context.screen.scene.objects if obj.type == 'CAMERA' and int(obj.name[-2:]) in EngravingInternalOptions.options['cameras']]
+            else:
+                # no selection - all cameras from scene
+                EngravingInternalOptions.cameraslist = [obj for obj in context.screen.scene.objects if obj.type == 'CAMERA']
             # search for materials
             EngravingInternalOptions.materialslist = [material for material in bpy.data.materials if material.use_fake_user]
             EngravingInternalOptions.materialslist_gem = [material for material in EngravingInternalOptions.materialslist if material.name[:EngravingInternalOptions.materialidtextlength] == EngravingInternalOptions.materialgemid]
             EngravingInternalOptions.materialslist_met = [material for material in EngravingInternalOptions.materialslist if material.name[:EngravingInternalOptions.materialidtextlength] == EngravingInternalOptions.materialmetid]
+            # set required engine
+            if EngravingInternalOptions.options['engine'] == 'internal':
+                context.scene.render.engine = 'BLENDER_RENDER'
+            elif EngravingInternalOptions.options['engine'] == 'cycles':
+                context.scene.render.engine = 'CYCLES'
+            if context.scene.render.engine == 'BLENDER_RENDER':
+                EngravingInternalOptions.materialgraviname = 'Gravi_internal'
+                EngravingInternalOptions.materialtransparentname = 'Trans_internal'
+            elif context.scene.render.engine == 'CYCLES':
+                EngravingInternalOptions.materialgraviname = 'Gravi_cycles'
+                EngravingInternalOptions.materialtransparentname = 'Trans_cycles'
+            else:
+                print('-- Error: Unsupported render engine --')
+                return {'CANCELLED'}
             # start processing obj by list
             print('-- STARTED --')
+            print('RENDER IN: ', context.scene.render.engine)
             EngravingInternal.processobjlist(context)
         return {'FINISHED'}
 
