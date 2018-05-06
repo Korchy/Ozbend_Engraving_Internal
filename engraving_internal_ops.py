@@ -63,9 +63,6 @@ class EngravingInternalStart(bpy.types.Operator):
             print('Options file mast be in the same directory with blend-file')
             return {'CANCELLED'}
         if EngravingInternalOptions.options:
-            print('------------------------------------------')
-            print(EngravingInternalOptions.options)
-            print('------------------------------------------')
             context.screen.scene.render.resolution_x = EngravingInternalOptions.options['resolution_x']
             context.screen.scene.render.resolution_y = EngravingInternalOptions.options['resolution_y']
             context.screen.scene.cycles.samples = EngravingInternalOptions.options['samples']
